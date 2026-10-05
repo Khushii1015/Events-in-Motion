@@ -1,0 +1,476 @@
+/* =====================================================
+   Letter Garden — poster styles
+   ===================================================== */
+
+:root {
+  --paper: #f4efe4;
+  --ink: #1d1b16;
+  --muted: #6f6a5e;
+  --outline: rgba(29, 27, 22, 0.13);
+  --stem: #3f7d3a;
+  --leaf: #2f6b34;
+  --leaf-light: #7ab35c;
+  --pot: #c4643c;
+  --pot-dark: #8e4426;
+  --sun: #ffc94a;
+  --accent: #e4572e;
+
+  --wilt: 0;      /* 0 = healthy, 1 = fully wilted (set by JS) */
+  --lean: 0;      /* degrees the plant leans toward the sun (set by JS) */
+  --scale: 1;     /* shrinks the plant to fit the window (set by JS) */
+  --sx: 80vw;     /* sun position (set by JS) */
+  --sy: 140px;
+}
+
+/* Time of day changes the whole palette (data-period set by JS) */
+body[data-period="morning"] { --paper: #fbf0dc; --sun: #ffb347; }
+body[data-period="evening"] { --paper: #f6dcc9; --sun: #ff8a5c; --accent: #c2477a; }
+body[data-period="night"] {
+  --paper: #161a26;
+  --ink: #ece6d8;
+  --muted: #9b97a8;
+  --outline: rgba(236, 230, 216, 0.1);
+  --sun: #e4e2f0;           /* the sun becomes a moon */
+  --leaf: #4f9a52;
+  --leaf-light: #9ccc7d;
+  --stem: #5d9e57;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "DM Mono", ui-monospace, Menlo, monospace;
+  overflow: hidden;
+  transition: background 1.2s, color 1.2s;
+}
+
+/* ---------- Poster background ---------- */
+#sun {
+  position: fixed;
+  left: 0; top: 0;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--sun) 0 42%, transparent 70%);
+  translate: calc(var(--sx) - 60px) calc(var(--sy) - 60px);
+  transition: translate 0.3s ease-out, background 1.2s;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#bigword {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 24vw;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--outline);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.6s;
+}
+#bigword.flash { animation: flash 0.9s ease-out; }
+@keyframes flash {
+  0%   { color: var(--accent); scale: 1.06; }
+  100% { color: transparent; scale: 1; }
+}
+
+/* ---------- Header ---------- */
+header.top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px 0;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+h1 {
+  margin: 0;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+#status {
+  width: 230px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--ink);
+  background: color-mix(in srgb, var(--paper) 85%, transparent);
+  font-size: 0.75rem;
+  transition: border-color 1.2s, background 1.2s;
+}
+#status .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+#mood {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-size: 1.15rem;
+}
+.meter {
+  height: 10px;
+  margin: 8px 0 10px;
+  border: 1.5px solid var(--ink);
+}
+#health-bar {
+  height: 100%;
+  width: 100%;
+  background: #3f9d4a;
+  transition: width 0.5s, background 0.5s;
+}
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 10px;
+  margin: 0;
+}
+dt { color: var(--muted); }
+dd { margin: 0; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* ---------- Stage + plant ---------- */
+#stage {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+}
+
+#plant {
+  position: absolute;
+  left: 50%;
+  bottom: 86px;
+  width: 0;
+  height: 0;
+  transform-origin: center bottom;
+  transform: rotate(calc(var(--lean) * 1deg + var(--wilt) * 9deg)) scale(var(--scale));
+  filter: saturate(calc(1 - var(--wilt) * 0.75)) brightness(calc(1 - var(--wilt) * 0.12));
+  transition: transform 0.6s ease-out, filter 0.8s;
+  cursor: pointer;
+}
+#plant.perk { animation: perk 0.45s ease-out; }
+@keyframes perk { 40% { translate: 0 -14px; } }
+
+#stem {
+  position: absolute;
+  left: -3px;
+  bottom: -6px;
+  width: 6px;
+  height: 0;
+  border-radius: 3px;
+  background: var(--stem);
+  transition: height 0.35s ease-out, background 1.2s;
+}
+
+/* Leaves — one per letter */
+.leaf {
+  position: absolute;
+  width: 46px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--leaf);
+  transition: transform 0.8s ease-out, background 1.2s;
+}
+.leaf.vowel { background: var(--leaf-light); color: var(--ink); }
+.leaf.right {
+  left: 2px;
+  border-radius: 0 100% 0 100%;
+  transform-origin: left center;
+  transform: rotate(calc(var(--wilt) * 70deg - var(--tilt)));
+}
+.leaf.left {
+  right: 2px;
+  border-radius: 100% 0 100% 0;
+  transform-origin: right center;
+  transform: rotate(calc(var(--tilt) - var(--wilt) * 70deg));
+}
+
+/* Flowers — one per finished word */
+.flower {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  transition: transform 0.8s ease-out;
+}
+.flower.right { left: 4px; transform: rotate(calc(var(--wilt) * 35deg)); transform-origin: left bottom; }
+.flower.left  { right: 4px; transform: rotate(calc(var(--wilt) * -35deg)); transform-origin: right bottom; }
+.petal {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 24px; height: 34px;
+  margin: -17px 0 0 -12px;
+  display: grid;
+  place-items: start center;
+  padding-top: 2px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: var(--petal);
+  color: #1d1b16;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  text-transform: uppercase;
+  transform: rotate(var(--a)) translateY(-20px);
+}
+.core {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 20px; height: 20px;
+  margin: -10px 0 0 -10px;
+  border-radius: 50%;
+  background: #3b2a1a;
+  border: 3px solid #f2c94c;
+}
+
+/* Grow / bloom / fall animations use individual transform
+   properties so they don't fight the droop transform above */
+.grow  { animation: grow 0.35s cubic-bezier(.3, 1.6, .5, 1); }
+.bloom { animation: bloom 0.7s cubic-bezier(.3, 1.4, .5, 1); }
+.falling { animation: fall 0.8s ease-in forwards; pointer-events: none; }
+@keyframes grow  { from { scale: 0; } to { scale: 1; } }
+@keyframes bloom { from { scale: 0; rotate: -120deg; } to { scale: 1; rotate: 0deg; } }
+@keyframes fall  { to { translate: 0 240px; rotate: 200deg; opacity: 0; } }
+
+/* Pot */
+#pot {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 150px;
+  translate: -50% 0;
+  cursor: pointer;
+}
+.rim {
+  height: 18px;
+  border-radius: 4px;
+  background: var(--pot);
+  filter: brightness(0.92);
+}
+.pot-body {
+  height: 72px;
+  margin: 0 12px;
+  display: grid;
+  place-items: center;
+  background: var(--pot);
+  clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%);
+  transition: background 0.6s;
+}
+.pot-body span {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+#pot.wet .pot-body, #pot.wet .rim { background: var(--pot-dark); }
+
+#empty-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 128px;
+  translate: -50% 0;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  white-space: nowrap;
+  animation: bob 2s ease-in-out infinite;
+}
+#empty-hint.hidden { display: none; }
+@keyframes bob { 50% { translate: -50% -6px; } }
+
+/* Rain (Enter key) */
+#rain {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.drop {
+  position: absolute;
+  top: -20px;
+  width: 3px;
+  height: 16px;
+  border-radius: 2px;
+  background: #5aa7d6;
+  animation: drop 0.9s linear forwards;
+}
+@keyframes drop { to { translate: 0 var(--fall); } }
+
+/* Hearts (click to pet) */
+.heart {
+  position: fixed;
+  z-index: 5;
+  color: var(--accent);
+  font-size: 1.3rem;
+  pointer-events: none;
+  animation: heart 1s ease-out forwards;
+}
+@keyframes heart { to { translate: var(--dx) -80px; opacity: 0; scale: 1.4; } }
+
+/* Idle: the plant falls asleep */
+#zzz {
+  position: absolute;
+  left: calc(50% + 50px);
+  bottom: 150px;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 0.6s;
+  pointer-events: none;
+}
+#zzz span { font-size: 0.75em; margin-left: 4px; }
+body.asleep #zzz { opacity: 1; animation: drift 2.4s ease-in-out infinite; }
+body.asleep #bigword { opacity: 0.35; }
+body.asleep #plant { animation: breathe 3s ease-in-out infinite; }
+body.asleep #stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 22, 40, 0.1);
+  pointer-events: none;
+}
+@keyframes drift { 50% { translate: 8px -10px; } }
+@keyframes breathe { 50% { translate: 0 3px; } }
+
+/* ---------- Footer ---------- */
+footer {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  margin: 0 24px;
+  padding: 12px 0 18px;
+  border-top: 1.5px solid var(--ink);
+  text-align: center;
+  transition: border-color 1.2s;
+}
+
+#caption {
+  margin: 0;
+  min-height: 1.3em;
+  max-width: 100%;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 500;
+  font-size: clamp(1rem, 2.4vw, 1.5rem);
+  overflow-wrap: anywhere;
+}
+#caption-text.placeholder { color: var(--muted); }
+.cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 0.12em;
+  margin-left: 2px;
+  background: var(--accent);
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.keys {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+.keys b { color: var(--ink); font-weight: 500; }
+kbd {
+  padding: 0 5px;
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.72rem;
+}
+
+#ticker {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--accent);
+}
+
+#type-btn {
+  display: none;
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+}
+.touch-only { display: none; }
+
+#hidden-input {
+  position: fixed;
+  left: -200px;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+/* Touch devices: show the type button and swipe hint */
+@media (hover: none) {
+  #type-btn { display: inline-block; }
+  .touch-only { display: list-item; }
+}
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 10;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.85rem;
+  opacity: 0;
+  transform: translate(-50%, 80px);
+  transition: transform 0.3s, opacity 0.3s;
+  pointer-events: none;
+}
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* Narrow windows */
+@media (max-width: 640px) {
+  header.top { padding: 16px 16px 0; }
+  #status { width: 165px; font-size: 0.68rem; padding: 10px; }
+  footer { margin: 0 16px; }
+  .keys { font-size: 0.68rem; gap: 4px 10px; }
+}

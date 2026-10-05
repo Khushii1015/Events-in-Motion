@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letter Garden</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-period="day">
+  <!-- Background poster layers -->
+  <div id="sun" aria-hidden="true"></div>
+  <div id="bigword" aria-hidden="true">type</div>
+
+  <header class="top">
+    <div class="brand">
+      <p class="eyebrow">Interactive poster · No. 01</p>
+      <h1>Letter<br>Garden</h1>
+    </div>
+
+    <!-- Live status card (time + window info) -->
+    <aside id="status" aria-live="polite">
+      <div class="row">
+        <span>Mood</span>
+        <strong id="mood">thriving</strong>
+      </div>
+      <div class="meter"><div id="health-bar"></div></div>
+      <dl>
+        <dt>Letters</dt><dd id="stat-letters">0</dd>
+        <dt>Blooms</dt><dd id="stat-blooms">0</dd>
+        <dt>Planted</dt><dd id="stat-age">just now</dd>
+        <dt>Local time</dt><dd id="stat-time">--</dd>
+        <dt>Window</dt><dd id="stat-window">--</dd>
+      </dl>
+    </aside>
+  </header>
+
+  <!-- The plant lives here -->
+  <main id="stage">
+    <div id="rain" aria-hidden="true"></div>
+    <div id="plant"><div id="stem"></div></div>
+    <div id="pot" title="Click to pet">
+      <div class="rim"></div>
+      <div class="pot-body"><span>pet me</span></div>
+    </div>
+    <p id="empty-hint">Start typing to grow your first leaf</p>
+    <div id="zzz" aria-hidden="true">z<span>z</span><span>z</span></div>
+  </main>
+
+  <footer>
+    <p id="caption"><span id="caption-text"></span><span class="cursor"></span></p>
+    <ul class="keys">
+      <li><kbd>A–Z</kbd> grow a leaf</li>
+      <li><kbd>Space</kbd> bloom the word</li>
+      <li><kbd>⌫</kbd> drop a leaf</li>
+      <li><kbd>Enter</kbd> water</li>
+      <li><kbd>Esc</kbd> replant</li>
+      <li><b>Click</b> pet it</li>
+      <li><b>Mouse</b> move the sun</li>
+      <li class="touch-only"><b>Swipe down</b> shake off a leaf</li>
+    </ul>
+    <p id="ticker">› waiting for your first move</p>
+    <button id="type-btn" type="button">⌨ Tap to type</button>
+    <input id="hidden-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Type to grow the plant">
+  </footer>
+
+  <div id="toast" role="status"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
