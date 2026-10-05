@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Scroll progress bar (window scroll event) -->
+  <div id="progress-bar"></div>
+
+  <header>
+    <div>
+      <h1 id="greeting">Hello</h1>
+      <p id="clock">--:--:--</p>
+    </div>
+    <button id="theme-btn" type="button">🌙 Dark mode <kbd>T</kbd></button>
+  </header>
+
+  <main>
+    <!-- MOUSE + TOUCH: spotlight follows the pointer, click drops a ripple -->
+    <section class="card" id="spotlight-card">
+      <h2>Mouse spotlight</h2>
+      <p>Move your mouse (or drag a finger) over this card. Click or tap to drop a ripple.</p>
+      <p class="coords">x: <span id="mx">0</span> · y: <span id="my">0</span></p>
+    </section>
+
+    <!-- TIME + KEYBOARD: focus timer -->
+    <section class="card">
+      <h2>Focus timer</h2>
+      <p id="timer">25:00</p>
+      <div class="row">
+        <button id="start-btn" type="button">Start</button>
+        <button id="reset-btn" type="button" class="secondary">Reset</button>
+      </div>
+      <p class="hint"><kbd>Space</kbd> start/pause · <kbd>R</kbd> reset</p>
+    </section>
+
+    <!-- KEYBOARD + MOUSE + TOUCH: task list built with DOM methods -->
+    <section class="card wide">
+      <h2>Task list</h2>
+      <form id="task-form">
+        <input id="task-input" placeholder="Add a task and press Enter" autocomplete="off">
+        <button type="submit">Add</button>
+      </form>
+      <p class="hint">Click to complete · Double-click or swipe left to delete · <kbd>/</kbd> to jump here</p>
+      <ul id="task-list"></ul>
+      <p id="task-count">No tasks yet</p>
+    </section>
+
+    <!-- WINDOW: BOM information that updates live -->
+    <section class="card">
+      <h2>Window info (BOM)</h2>
+      <ul class="info">
+        <li>Viewport <span id="viewport"></span></li>
+        <li>Layout <span id="layout"></span></li>
+        <li>Screen <span id="screen"></span></li>
+        <li>Language <span id="lang"></span></li>
+        <li>Connection <span id="online"></span></li>
+        <li>Page <span id="url"></span></li>
+      </ul>
+    </section>
+
+    <!-- Every event that fires is recorded here -->
+    <section class="card">
+      <h2>Event log</h2>
+      <ul id="log"></ul>
+    </section>
+  </main>
+
+  <div id="toast" role="status"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
