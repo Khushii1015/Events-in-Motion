@@ -3,71 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Study Dashboard</title>
+  <title>Letter Garden</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <!-- Scroll progress bar (window scroll event) -->
-  <div id="progress-bar"></div>
+<body data-period="day">
+  <!-- Background poster layers -->
+  <div id="sun" aria-hidden="true"></div>
+  <div id="bigword" aria-hidden="true">type</div>
 
-  <header>
-    <div>
-      <h1 id="greeting">Hello</h1>
-      <p id="clock">--:--:--</p>
+  <header class="top">
+    <div class="brand">
+      <p class="eyebrow">Interactive poster · No. 01</p>
+      <h1>Letter<br>Garden</h1>
     </div>
-    <button id="theme-btn" type="button">🌙 Dark mode <kbd>T</kbd></button>
+
+    <!-- Live status card (time + window info) -->
+    <aside id="status" aria-live="polite">
+      <div class="row">
+        <span>Mood</span>
+        <strong id="mood">thriving</strong>
+      </div>
+      <div class="meter"><div id="health-bar"></div></div>
+      <dl>
+        <dt>Letters</dt><dd id="stat-letters">0</dd>
+        <dt>Blooms</dt><dd id="stat-blooms">0</dd>
+        <dt>Planted</dt><dd id="stat-age">just now</dd>
+        <dt>Local time</dt><dd id="stat-time">--</dd>
+        <dt>Window</dt><dd id="stat-window">--</dd>
+      </dl>
+    </aside>
   </header>
 
-  <main>
-    <!-- MOUSE + TOUCH: spotlight follows the pointer, click drops a ripple -->
-    <section class="card" id="spotlight-card">
-      <h2>Mouse spotlight</h2>
-      <p>Move your mouse (or drag a finger) over this card. Click or tap to drop a ripple.</p>
-      <p class="coords">x: <span id="mx">0</span> · y: <span id="my">0</span></p>
-    </section>
-
-    <!-- TIME + KEYBOARD: focus timer -->
-    <section class="card">
-      <h2>Focus timer</h2>
-      <p id="timer">25:00</p>
-      <div class="row">
-        <button id="start-btn" type="button">Start</button>
-        <button id="reset-btn" type="button" class="secondary">Reset</button>
-      </div>
-      <p class="hint"><kbd>Space</kbd> start/pause · <kbd>R</kbd> reset</p>
-    </section>
-
-    <!-- KEYBOARD + MOUSE + TOUCH: task list built with DOM methods -->
-    <section class="card wide">
-      <h2>Task list</h2>
-      <form id="task-form">
-        <input id="task-input" placeholder="Add a task and press Enter" autocomplete="off">
-        <button type="submit">Add</button>
-      </form>
-      <p class="hint">Click to complete · Double-click or swipe left to delete · <kbd>/</kbd> to jump here</p>
-      <ul id="task-list"></ul>
-      <p id="task-count">No tasks yet</p>
-    </section>
-
-    <!-- WINDOW: BOM information that updates live -->
-    <section class="card">
-      <h2>Window info (BOM)</h2>
-      <ul class="info">
-        <li>Viewport <span id="viewport"></span></li>
-        <li>Layout <span id="layout"></span></li>
-        <li>Screen <span id="screen"></span></li>
-        <li>Language <span id="lang"></span></li>
-        <li>Connection <span id="online"></span></li>
-        <li>Page <span id="url"></span></li>
-      </ul>
-    </section>
-
-    <!-- Every event that fires is recorded here -->
-    <section class="card">
-      <h2>Event log</h2>
-      <ul id="log"></ul>
-    </section>
+  <!-- The plant lives here -->
+  <main id="stage">
+    <div id="rain" aria-hidden="true"></div>
+    <div id="plant"><div id="stem"></div></div>
+    <div id="pot" title="Click to pet">
+      <div class="rim"></div>
+      <div class="pot-body"><span>pet me</span></div>
+    </div>
+    <p id="empty-hint">Start typing to grow your first leaf</p>
+    <div id="zzz" aria-hidden="true">z<span>z</span><span>z</span></div>
   </main>
+
+  <footer>
+    <p id="caption"><span id="caption-text"></span><span class="cursor"></span></p>
+    <ul class="keys">
+      <li><kbd>A–Z</kbd> grow a leaf</li>
+      <li><kbd>Space</kbd> bloom the word</li>
+      <li><kbd>⌫</kbd> drop a leaf</li>
+      <li><kbd>Enter</kbd> water</li>
+      <li><kbd>Esc</kbd> replant</li>
+      <li><b>Click</b> pet it</li>
+      <li><b>Mouse</b> move the sun</li>
+      <li class="touch-only"><b>Swipe down</b> shake off a leaf</li>
+    </ul>
+    <p id="ticker">› waiting for your first move</p>
+    <button id="type-btn" type="button">⌨ Tap to type</button>
+    <input id="hidden-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Type to grow the plant">
+  </footer>
 
   <div id="toast" role="status"></div>
 
